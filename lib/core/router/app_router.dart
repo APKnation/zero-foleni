@@ -6,6 +6,10 @@ import '../../features/auth/login_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/hospitals/hospital_list_screen.dart';
 import '../../features/services/service_list_screen.dart';
+import '../../features/university/screens/university_list_screen.dart';
+import '../../features/university/screens/university_service_screen.dart';
+import '../../features/university/screens/university_ticket_tracking_screen.dart';
+import '../../features/staff/staff_dashboard_screen.dart';
 import '../../features/booking/booking_screen.dart';
 import '../../features/queue/queue_ticket_screen.dart';
 import '../../features/queue/queue_tracking_screen.dart';
@@ -26,6 +30,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/tracking', builder: (_, __) => const QueueTrackingScreen()),
       GoRoute(path: '/profile', builder: (_, __) => const ProfileScreen()),
       GoRoute(path: '/history', builder: (_, __) => const HistoryScreen()),
+      GoRoute(path: '/universities', builder: (_, __) => const UniversityListScreen()),
+      GoRoute(path: '/uni-services/:uniId', builder: (_, s) => UniversityServiceScreen(uniId: s.pathParameters['uniId']!)),
+      GoRoute(path: '/uni-ticket', builder: (_, __) => const UniversityTicketScreen()),
+      GoRoute(path: '/uni-tracking', builder: (_, __) => const UniversityTrackingScreen()),
+      GoRoute(path: '/staff', builder: (_, __) => const StaffDashboardScreen()),
     ],
   );
 });

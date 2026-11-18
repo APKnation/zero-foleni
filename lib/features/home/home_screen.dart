@@ -5,24 +5,22 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final items = [
-      ('Hospitals', Icons.local_hospital, '/hospitals'),
-      ('My Queue', Icons.confirmation_number, '/tracking'),
-      ('History', Icons.history, '/history'),
-      ('Profile', Icons.person, '/profile'),
-    ];
     return Scaffold(
       appBar: AppBar(title: const Text('ZeroFoleni')),
-      body: GridView.count(
-        crossAxisCount: 2,
+      body: Padding(
         padding: const EdgeInsets.all(16),
-        children: items.map((e) => Card(
-          child: InkWell(
-            onTap: () => context.go(e.$3),
-            child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [Icon(e.$2, size: 48), Text(e.$1)])),
-          ),
-        )).toList(),
+        child: Column(children: [
+          const Text('Choose a service category', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 16),
+          Expanded(child: GridView.count(crossAxisCount: 2, children: [
+            _cat(context, 'Hospitals', Icons.local_hospital, '/hospitals'),
+            _cat(context, 'Universities', Icons.school, '/universities'),
+            _cat(context, 'My Queue', Icons.confirmation_number, '/tracking'),
+            _cat(context, 'History', Icons.history, '/history'),
+          ])),
+        ]),
       ),
     );
   }
+  Widget _cat(BuildContext c, String t, IconData i, String r) => Card(child: InkWell(onTap: () => c.go(r), child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [Icon(i, size: 48), Text(t)]))));
 }

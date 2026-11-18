@@ -13,7 +13,7 @@ class QueueTicketScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              const Text('Ticket #Z-042', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              const Text('Ticket #0427', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               const Text('Muhimbili National Hospital'),
               const Text('General Consultation'),
