@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
           Expanded(child: GridView.count(crossAxisCount: 2, children: [
             _cat(context, 'Hospitals', Icons.local_hospital, '/hospitals'),
             _cat(context, 'Universities', Icons.school, '/universities'),
-            _cat(context, 'My Queue', Icons.confirmation_number, '/tracking'),
+            _cat(context, 'Government', Icons.account_balance, '/government'),
             _cat(context, 'History', Icons.history, '/history'),
           ])),
         ]),
