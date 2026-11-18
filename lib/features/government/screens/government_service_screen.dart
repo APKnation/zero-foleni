@@ -15,7 +15,7 @@ class GovernmentServiceScreen extends StatelessWidget {
           leading: const Icon(Icons.description),
           title: Text(services[i]),
           trailing: const Icon(Icons.chevron_right),
-          onTap: () => context.go('/gov-ticket'),
+          onTap: () => context.go('/gov-providers'),
         ),
       ),
     );

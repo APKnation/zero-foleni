@@ -13,6 +13,7 @@ import '../../features/staff/staff_dashboard_screen.dart';
 import '../../features/government/screens/government_list_screen.dart';
 import '../../features/government/screens/government_service_screen.dart';
 import '../../features/government/screens/government_ticket_tracking_screen.dart';
+import '../../features/government/screens/service_providers_screen.dart';
 import '../../features/booking/booking_screen.dart';
 import '../../features/queue/queue_ticket_screen.dart';
 import '../../features/queue/queue_tracking_screen.dart';
@@ -40,6 +41,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/staff', builder: (_, __) => const StaffDashboardScreen()),
       GoRoute(path: '/government', builder: (_, __) => const GovernmentListScreen()),
       GoRoute(path: '/gov-services/:govId', builder: (_, s) => GovernmentServiceScreen(govId: s.pathParameters['govId']!)),
+      GoRoute(path: '/gov-providers', builder: (_, __) => const ServiceProvidersScreen()),
       GoRoute(path: '/gov-ticket', builder: (_, __) => const GovernmentTicketScreen()),
       GoRoute(path: '/gov-tracking', builder: (_, __) => const GovernmentTrackingScreen()),
     ],

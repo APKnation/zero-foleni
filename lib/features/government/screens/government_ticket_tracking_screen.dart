@@ -11,6 +11,8 @@ class GovernmentTicketScreen extends StatelessWidget {
       const SizedBox(height: 8),
       const Text('NIDA – National Identification'),
       const Text('NIDA ID Application'),
+      const Text('Provider: Amina Juma'),
+      const Text('Time: 10:30 AM'),
       const SizedBox(height: 16),
       FilledButton(onPressed: () => context.go('/gov-tracking'), child: const Text('Track Queue')),
     ])))),
