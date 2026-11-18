@@ -14,6 +14,13 @@ import '../../features/government/screens/government_list_screen.dart';
 import '../../features/government/screens/government_service_screen.dart';
 import '../../features/government/screens/government_ticket_tracking_screen.dart';
 import '../../features/government/screens/service_providers_screen.dart';
+import '../../features/bank/screens/bank_list_screen.dart';
+import '../../features/bank/screens/bank_branch_screen.dart';
+import '../../features/bank/screens/bank_service_screen.dart';
+import '../../features/bank/screens/bank_provider_screen.dart';
+import '../../features/bank/screens/bank_booking_screen.dart';
+import '../../features/bank/screens/bank_ticket_tracking_screen.dart';
+import '../../features/bank/screens/bank_staff_screens.dart';
 import '../../features/booking/booking_screen.dart';
 import '../../features/queue/queue_ticket_screen.dart';
 import '../../features/queue/queue_tracking_screen.dart';
@@ -44,6 +51,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/gov-providers', builder: (_, __) => const ServiceProvidersScreen()),
       GoRoute(path: '/gov-ticket', builder: (_, __) => const GovernmentTicketScreen()),
       GoRoute(path: '/gov-tracking', builder: (_, __) => const GovernmentTrackingScreen()),
+      GoRoute(path: '/bank', builder: (_, __) => const BankListScreen()),
+      GoRoute(path: '/bank-branches/:bankId', builder: (_, s) => BankBranchScreen(bankId: s.pathParameters['bankId']!)),
+      GoRoute(path: '/bank-services/:bankId/:branchId', builder: (_, s) => BankServiceScreen(bankId: s.pathParameters['bankId']!, branchId: s.pathParameters['branchId']!)),
+      GoRoute(path: '/bank-providers/:bankId/:branchId/:serviceId', builder: (_, s) => BankProviderScreen(bankId: s.pathParameters['bankId']!, branchId: s.pathParameters['branchId']!, serviceId: s.pathParameters['serviceId']!)),
+      GoRoute(path: '/bank-booking/:bankId/:branchId/:serviceId/:providerId', builder: (_, s) => BankBookingScreen(bankId: s.pathParameters['bankId']!, branchId: s.pathParameters['branchId']!, serviceId: s.pathParameters['serviceId']!, providerId: s.pathParameters['providerId']!)),
+      GoRoute(path: '/bank-ticket', builder: (_, __) => const BankTicketScreen()),
+      GoRoute(path: '/bank-tracking', builder: (_, __) => const BankTrackingScreen()),
+      GoRoute(path: '/bank-teller', builder: (_, __) => const BankTellerDashboardScreen()),
+      GoRoute(path: '/bank-branch-manager', builder: (_, __) => const BankBranchManagerScreen()),
+      GoRoute(path: '/bank-admin', builder: (_, __) => const BankAdminDashboardScreen()),
     ],
   );
 });

@@ -16,6 +16,7 @@ class HomeScreen extends StatelessWidget {
             _cat(context, 'Hospitals', Icons.local_hospital, '/hospitals'),
             _cat(context, 'Universities', Icons.school, '/universities'),
             _cat(context, 'Government', Icons.account_balance, '/government'),
+            _cat(context, 'Banks', Icons.account_balance_wallet, '/bank'),
             _cat(context, 'History', Icons.history, '/history'),
           ])),
         ]),

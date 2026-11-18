@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'graphene_django',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'zerofoleni',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'PASSWORD': 'Kafuka2004!',
         'HOST': 'localhost',
         'PORT': '5432',
     }
