@@ -58,7 +58,6 @@ class _BankProviderScreenState extends State<BankProviderScreen> {
                 onTap: () => context.pop(),
               ),
             ),
-      ),
     );
   }
 }

@@ -12,7 +12,9 @@ class BankServiceScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _BankServiceScreenState createState() => _BankServiceScreenState;
+  _BankServiceScreenState createState() {
+    return _BankServiceScreenState();
+  }
 }
 
 class _BankServiceScreenState extends State<BankServiceScreen> {
@@ -56,7 +58,6 @@ class _BankServiceScreenState extends State<BankServiceScreen> {
                 onTap: () => context.pop(),
               ),
             ),
-      ),
     );
   }
 }

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/router/auth_provider.dart';
 import '../../core/services/api_service.dart';
+import '../../core/router/auth_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
-
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
@@ -14,152 +13,129 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _loading = false;
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
   String? _errorMessage;
 
-  Future<void> _handleLogin() async {
-    final phone = _phoneController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (phone.isEmpty || password.isEmpty) {
-      setState(() {
-        _errorMessage = 'Tafadhali ingiza namba ya simu na nenosiri';
-      });
-      return;
-    }
-
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
     setState(() {
-      _loading = true;
+      _isLoading = true;
       _errorMessage = null;
     });
 
+    // Build mutation string without problematic $() interpolation in multiline
+    final phone = _phoneController.text;
+    final password = _passwordController.text;
+    final mutation = 'mutation { loginCitizen(phone: "$phone", password: "$password") { citizen { id fullName phone email nationalId } success message token } }';
+
     try {
-      final res = await ApiService.loginCitizen(phone: phone, password: password);
-      if (mounted) {
-        setState(() => _loading = false);
+      final res = await ApiService.query(mutation);
+      
+      final data = res['data']?['loginCitizen'] ?? {};
+      final success = data['success'] as bool?;
+      final message = data['message'] as String?;
+      final token = data['token'] as String?;
 
-        if (res['success'] == true) {
-          // Set Riverpod auth state so GoRouter allows navigation to /home
-          ref.read(authProvider.notifier).login(phone, password);
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(res['message'] ?? 'Umeingia kikamilifu!'),
-              backgroundColor: Colors.green[700],
-            ),
-          );
+      if (success == true && token != null) {
+        ref.read(authProvider.notifier).login(phone, password);
+        if (context.mounted) {
           context.go('/home');
-        } else {
-          setState(() {
-            _errorMessage = res['message'] ?? 'Kuingia kumeshindikana';
-          });
         }
-      }
-    } catch (e) {
-      if (mounted) {
+      } else {
         setState(() {
-          _loading = false;
-          _errorMessage = 'Hitilafu ya mtandao: $e';
+          _errorMessage = message ?? 'Login failed';
         });
       }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Connection error: $e';
+      });
+    } finally {
+      setState(() => _isLoading = false);
     }
-  }
-
-  void _skipDemo() {
-    ref.read(authProvider.notifier).login('demo', 'demo');
-    context.go('/home');
-  }
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = ref.watch(authProvider);
     return Scaffold(
+      // Apply the new color scheme
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
         title: const Text('Login'),
         leading: BackButton(onPressed: () => context.pop()),
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Icon(Icons.lock_outline, size: 64, color: Colors.blueGrey),
-            const SizedBox(height: 16),
-            const Text(
-              'Karibu ZeroFoleni',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Ingia ili kupata huduma bila kupanga foleni',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 32),
-            TextField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
-                labelText: 'Namba ya Simu au Barua Pepe',
-                hintText: 'Mfano: 0712345678',
-                prefixIcon: Icon(Icons.phone),
-                border: OutlineInputBorder(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              // Use foleni.jpg as the app logo
+              Image.asset(
+                'images/foleni.jpg',
+                width: 120,
+                height: 120,
+                fit: BoxFit.contain,
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Nenosiri (Password)',
-                prefixIcon: Icon(Icons.lock),
-                border: OutlineInputBorder(),
+              const SizedBox(height: 24),
+              const Text('Welcome Back', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1A2D42))),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Phone or Email',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                  ),
+                ),
+                validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                keyboardType: TextInputType.phone,
               ),
-            ),
-            if (_errorMessage != null) ...[
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.red[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.shade300),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                  ),
+                  obscureText: true,
                 ),
-                child: Text(
-                  _errorMessage!,
-                  style: TextStyle(color: Colors.red[800], fontSize: 13),
-                ),
+                validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+              ),
+              const SizedBox(height: 20),
+              if (_errorMessage != null)
+                Text(_errorMessage!, style: TextStyle(color: Colors.red[700])),
+              const SizedBox(height: 12),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : FilledButton(
+                    onPressed: _login,
+                    child: const Text('Login'),
+                  ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => context.go('/register'),
+                child: const Text('Create new account'),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => context.go('/home'),
+                child: const Text('Skip (demo)'),
               ),
             ],
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _loading ? null : _handleLogin,
-              child: _loading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                    )
-                  : const Text('Ingia (Login)'),
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton(
-              onPressed: () => context.go('/register'),
-              child: const Text('Fungua Akaunti Mpya (Register)'),
-            ),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: _skipDemo,
-              child: const Text('Ruka moja kwa moja (Skip / Demo)'),
-            ),
-          ],
+          ),
         ),
       ),
     );
