@@ -73,3 +73,13 @@ class BankAppointment(models.Model):
     date = models.DateField()
     time = models.TimeField()
     status = models.CharField(max_length=20, default='booked')
+
+class Citizen(models.Model):
+    full_name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20, unique=True)
+    email = models.EmailField(max_length=255, blank=True)
+    national_id = models.CharField(max_length=50, blank=True)
+    password = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.full_name

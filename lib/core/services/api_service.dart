@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../models/citizen.dart';
 
 class ApiService {
   static const base = 'http://10.0.2.2:8000/graphql/';
@@ -15,5 +16,21 @@ class ApiService {
     final data = await query('{ allBanks { id name code } }');
     final list = (data['data']?['allBanks'] as List?) ?? [];
     return list.cast<Map<String, dynamic>>();
+  }
+  static Future<Map<String, dynamic>> registerCitizen({
+    required String fullName,
+    required String phone,
+    required String password,
+    String email = '',
+    String nationalId = '',
+  }) async {
+    final r = await http.post(
+      Uri.parse(base),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'query': '''mutation { registerCitizen(fullName: "$fullName", phone: "$phone", password: "$password", email: "$email", nationalId: "$nationalId") { citizen { id fullName phone email nationalId } success message } }'''
+      }),
+    );
+    return jsonDecode(r.body) as Map<String, dynamic>;
   }
 }

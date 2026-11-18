@@ -6,7 +6,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: BackButton(onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { context.go("/home"); } }), title: const Text('Login')),
+      appBar: AppBar(title: const Text('Login'), leading: BackButton(onPressed: () => context.pop())),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -16,6 +16,8 @@ class LoginScreen extends StatelessWidget {
             const TextField(decoration: InputDecoration(labelText: 'Password'), obscureText: true),
             const SizedBox(height: 24),
             FilledButton(onPressed: () => context.go('/home'), child: const Text('Login')),
+            const SizedBox(height: 12),
+            TextButton(onPressed: () => context.go('/register'), child: const Text('Create new account')),
             TextButton(onPressed: () => context.go('/home'), child: const Text('Skip (demo)')),
           ],
         ),
