@@ -35,7 +35,7 @@ class _BankListScreenState extends State<BankListScreen> {
     if (mounted) {
       if (data.isNotEmpty) {
         setState(() {
-          _banks = data;
+          _banks = List<Map<String, dynamic>>.from(data);
           _isLive = true;
           _loading = false;
         });

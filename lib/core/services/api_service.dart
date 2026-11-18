@@ -79,4 +79,59 @@ class ApiService {
     );
     return jsonDecode(r.body) as Map<String, dynamic>;
   }
+
+  // Bank operations
+  static Future<Map<String, dynamic>> createBankTicket({
+    required String bankId,
+    required String branchId,
+    required String serviceId,
+    String tellerId = "",
+  }) async {
+    final r = await http.post(
+      Uri.parse(base),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'query': '''mutation { createBankTicket(bankId: "$bankId", branchId: "$branchId", serviceId: "$serviceId", tellerId: "$tellerId") { ticket { id number position status } success message } }'''
+      }),
+    );
+    return jsonDecode(r.body) as Map<String, dynamic>;
+  }
+
+  static Map<String, dynamic> latestBankTicket = {};
+
+  static Future<Map<String, dynamic>> bookBankAppointment({
+    required String bankId,
+    required String branchId,
+    required String serviceId,
+    required String date,
+    required String time,
+  }) async {
+    final r = await http.post(
+      Uri.parse(base),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'query': '''mutation { bookBankAppointment(bankId: "$bankId", branchId: "$branchId", serviceId: "$serviceId", date: "$date", time: "$time") { appointment { id bank branch service date time status } success message } }'''
+      }),
+    );
+    return jsonDecode(r.body) as Map<String, dynamic>;
+  }
+
+  // Data fetching methods
+  static Future<List<Map>> getBranches({String? bankId}) async {
+    final data = await query(bankId != null ? '{ branches(bankId: $bankId) { id name location } }' : '{ allBranches { id name location } }');
+    final list = (data['data']?['allBranches'] ?? data['data']?['branches'] as List?) ?? [];
+    return list.cast<Map<String, dynamic>>();
+  }
+
+  static Future<List<Map>> getTellers({required String branchId}) async {
+    final data = await query('{ tellers(branchId: "$branchId") { id name available } }');
+    final list = (data['data']?['tellers'] as List?) ?? [];
+    return list.cast<Map<String, dynamic>>();
+  }
+
+  static Future<List<Map>> getBankServices({required String branchId}) async {
+    final data = await query('{ bankServices(branchId: "$branchId") { id name } }');
+    final list = (data['data']?['bankServices'] as List?) ?? [];
+    return list.cast<Map<String, dynamic>>();
+  }
 }

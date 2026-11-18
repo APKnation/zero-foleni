@@ -63,6 +63,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/bank-teller', builder: (_, __) => const BankTellerDashboardScreen()),
       GoRoute(path: '/bank-branch-manager', builder: (_, __) => const BankBranchManagerScreen()),
       GoRoute(path: '/bank-admin', builder: (_, __) => const BankAdminDashboardScreen()),
+      GoRoute(path: '/bank-reschedule', builder: (_, __) => const BankRescheduleScreen()),
     ],
   );
 });

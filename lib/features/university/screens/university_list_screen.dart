@@ -1,83 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/services/api_service.dart';
 
-class UniversityListScreen extends StatefulWidget {
+class UniversityListScreen extends StatelessWidget {
   const UniversityListScreen({super.key});
-
-  @override
-  State<UniversityListScreen> createState() => _UniversityListScreenState();
-}
-
-class _UniversityListScreenState extends State<UniversityListScreen> {
-  static const _fallbackUnis = [
-    {'id': '1', 'name': 'University of Dar es Salaam (UDSM)', 'location': 'Mlimani Campus'},
-    {'id': '2', 'name': 'Ardhi University (ARU)', 'location': 'Observation Hill, Dar es Salaam'},
-    {'id': '3', 'name': 'Mzumbe University', 'location': 'Morogoro Campus'},
-    {'id': '4', 'name': 'Sokoine University of Agriculture (SUA)', 'location': 'Morogoro'},
+  static const unis = [
+    'University of Dar es Salaam',
+    'Ardhi University',
+    'Mzumbe University',
+    'Sokoine University',
+    'St. Augustine University of Tanzania',
+    'Open University of Tanzania',
   ];
-
-  List<Map<String, dynamic>> _unis = [];
-  bool _loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUniversities();
-  }
-
-  Future<void> _loadUniversities() async {
-    setState(() => _loading = true);
-    final data = await ApiService.getInstitutions(type: 'university');
-    if (mounted) {
-      setState(() {
-        _unis = data.isNotEmpty ? data : List.from(_fallbackUnis);
-        _loading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final filtered = _filter.isNotEmpty
+        ? unis.where((u) => u.toLowerCase().contains(_filter.toLowerCase())).toList()
+        : unis;
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } else {
-              context.go('/home');
-            }
-          },
-        ),
-        title: const Text('Universities (Vyuo Vikuu)'),
+        title: const Text('Universities'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
-            onPressed: _loading ? null : _loadUniversities,
+            icon: const Icon(Icons.search),
+            onPressed: () => showSearch(context: context, delegate: UniversitySearchDelegate(unis)),
           ),
         ],
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _unis.length,
-              itemBuilder: (_, i) {
-                final u = _unis[i];
-                final id = u['id']?.toString() ?? '1';
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.blue.shade50,
-                    child: const Icon(Icons.school, color: Colors.blue),
-                  ),
-                  title: Text(u['name'] ?? ''),
-                  subtitle: Text(u['location'] ?? 'Tanzania'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go('/uni-services/$id'),
-                );
-              },
-            ),
+      body: ListView.builder(
+        itemCount: filtered.length,
+        itemBuilder: (_, i) => ListTile(
+          leading: const Icon(Icons.school),
+          title: Text(filtered[i]),
+          subtitle: const Text('Tanzania'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.go('/uni-services/u$i'),
+        ),
+      ),
+    );
+  }
+  
+  String get _filter => '';
+}
+
+class UniversitySearchDelegate extends SearchDelegate<String> {
+  final List<String> options;
+  UniversitySearchDelegate(this.options);
+  @override
+  List<Widget> buildActions(BuildContext context) => [
+    IconButton(icon: const Icon(Icons.close), onPressed: () => query = ''),
+  ];
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () => close(context, ''),
+  );
+  @override
+  Widget buildResults(BuildContext context) => ListView.builder(
+    itemCount: options.length,
+    itemBuilder: (_, i) => ListTile(
+      title: Text(options[i]),
+      onTap: () => close(context, options[i]),
+    ),
+  );
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return ListView.builder(
+      itemCount: options.length,
+      itemBuilder: (_, i) => ListTile(
+        title: Text(options[i]),
+        onTap: () => close(context, options[i]),
+      ),
     );
   }
 }

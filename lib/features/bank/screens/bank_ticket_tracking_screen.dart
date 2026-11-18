@@ -1,183 +1,141 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/services/api_service.dart';
 
 class BankTicketScreen extends StatelessWidget {
   const BankTicketScreen({super.key});
-
   @override
-  Widget build(BuildContext context) {
-    final ticket = ApiService.latestBankTicket;
-    final ticketNumber = ticket?['number'] ?? '3321';
-    final position = ticket?['position'] ?? 1;
-    final status = ticket?['status'] ?? 'waiting';
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Queue Ticket'),
-        leading: BackButton(onPressed: () => context.go('/home')),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.confirmation_number_outlined, size: 48, color: Colors.blue),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Ticket #$ticketNumber',
-                    style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black87),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'Hali: $status',
-                      style: TextStyle(color: Colors.blue.shade800, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const Divider(height: 32),
-                  _infoRow('Nafasi kwenye foleni:', 'Namba $position'),
-                  _infoRow('Huduma:', 'Cash / General Banking'),
-                  _infoRow('Muda uliokadiriwa:', 'Dakika ${position * 5}'),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      icon: const Icon(Icons.track_changes),
-                      label: const Text('Fuata Foleni (Track Queue)'),
-                      onPressed: () => context.go('/bank-tracking'),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  OutlinedButton(
-                    onPressed: () => context.go('/home'),
-                    child: const Text('Rudi Nyumbani'),
-                  ),
-                ],
-              ),
-            ),
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Queue Ticket')),
+    body: Center(child: Card(margin: const EdgeInsets.all(24), child: Padding(padding: const EdgeInsets.all(24), child: Column(mainAxisSize: MainAxisSize.min, children: [
+      const Text('Ticket #3321', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      const Text('NMB Bank'),
+      const Text('Cash Deposit'),
+      const Text('Teller: A. Juma'),
+      const Text('Time: 10:30 AM'),
+      const SizedBox(height: 16),
+      Row(children: [
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () => context.go('/bank-tracking'),
+            icon: const Icon(Icons.remove),
+            label: const Text('Cancel'),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _infoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(color: Colors.grey)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
+        const SizedBox(width: 8),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () => context.go('/bank-reschedule'),
+            icon: const Icon(Icons.schedule),
+            label: const Text('Reschedule'),
+          ),
+        ),
+      ]),
+      const SizedBox(height: 16),
+      FilledButton(onPressed: () => context.go('/bank-tracking'), child: const Text('Track Queue')),
+    ])))),
+  );
 }
 
-class BankTrackingScreen extends StatefulWidget {
-  const BankTrackingScreen({super.key});
-
+class BankRescheduleScreen extends StatefulWidget {
+  const BankRescheduleScreen({super.key});
   @override
-  State<BankTrackingScreen> createState() => _BankTrackingScreenState();
+  State<BankRescheduleScreen> createState() => _BankRescheduleScreenState();
 }
 
-class _BankTrackingScreenState extends State<BankTrackingScreen> {
-  bool _refreshing = false;
+class _BankRescheduleScreenState extends State<BankRescheduleScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _dateController = TextEditingController();
+  final _timeController = TextEditingController();
+  bool _isLoading = false;
 
-  Future<void> _refresh() async {
-    final ticket = ApiService.latestBankTicket;
-    if (ticket != null && ticket['number'] != null) {
-      setState(() => _refreshing = true);
-      final updated = await ApiService.getBankTicket(ticket['number'].toString());
-      if (mounted) {
-        setState(() {
-          _refreshing = false;
-          if (updated != null) {
-            ApiService.latestBankTicket = updated;
-          }
-        });
-      }
+  Future<void> _reschedule() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _isLoading = true);
+    // TODO: Call API rescheduleAppointment mutation
+    if (context.mounted) {
+      context.pop();
+      context.go('/bank-tracking');
     }
+    setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final ticket = ApiService.latestBankTicket;
-    final position = ticket?['position'] ?? 3;
-    final ahead = (position is int && position > 1) ? position - 1 : 0;
-    final ticketNum = ticket?['number'] ?? '3321';
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Queue Tracking'),
-        leading: BackButton(onPressed: () => context.go('/home')),
-        actions: [
-          IconButton(
-            icon: _refreshing
-                ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                : const Icon(Icons.refresh),
-            tooltip: 'Refresh',
-            onPressed: _refreshing ? null : _refresh,
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Reschedule Ticket')),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            Text('Tiketi #$ticketNum', style: const TextStyle(fontSize: 18, color: Colors.grey)),
-            const SizedBox(height: 12),
-            Text(
-              'Nafasi: $position',
-              style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+        child: Form(
+          key: _formKey,
+          child: Column(children: [
+            const Text('Reschedule Ticket #3321', style: TextStyle(fontSize: 20)),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _dateController,
+              decoration: const InputDecoration(labelText: 'New Date'),
+              validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+              onTap: () async {
+                final picked = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 30)));
+                if (picked != null) {
+                  setState(() => _dateController.text = picked.toLocal().toString().split(' ').first);
+                }
+              },
             ),
             const SizedBox(height: 12),
-            Card(
-              elevation: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Watu walio mbele yako:'),
-                        Text('$ahead', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Muda wa kusubiri:'),
-                        Text('~Dakika ${position * 5}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            TextFormField(
+              controller: _timeController,
+              decoration: const InputDecoration(labelText: 'New Time'),
+              validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+              onTap: () async {
+                final picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                if (picked != null) {
+                  setState(() => _timeController.text = picked.format(context));
+                }
+              },
             ),
-            const Spacer(),
-            FilledButton.tonal(
-              onPressed: () => context.go('/home'),
-              child: const Text('Rudi Nyumbani'),
-            ),
-          ],
+            const SizedBox(height: 24),
+            _isLoading
+                ? const CircularProgressIndicator()
+                : FilledButton(onPressed: _reschedule, child: const Text('Reschedule')),
+          ]),
         ),
       ),
     );
   }
+}
+
+class BankTicketDetailScreen extends StatelessWidget {
+  const BankTicketDetailScreen({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Ticket Details')),
+    body: const Padding(padding: EdgeInsets.all(24), child: Column(children: [
+      Text('Ticket #3321', style: TextStyle(fontSize: 24)),
+      SizedBox(height: 8),
+      Text('NMB Bank'),
+      SizedBox(height: 8),
+      Text('Cash Deposit'),
+      SizedBox(height: 8),
+      Text('Teller: A. Juma'),
+      SizedBox(height: 8),
+      Text('Position: 3'),
+      SizedBox(height: 8),
+      Text('Status: Waiting'),
+    ])),
+  );
+}
+
+class BankTrackingScreen extends StatelessWidget {
+  const BankTrackingScreen({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Queue Tracking')),
+    body: const Padding(padding: EdgeInsets.all(24), child: Column(children: [
+      Text('Position: 3', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
+      SizedBox(height: 8),
+      Text('Customers ahead: 2'),
+      Text('Estimated wait: 15 min'),
+    ])),
+  );
 }

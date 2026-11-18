@@ -1,83 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/services/api_service.dart';
 
-class HospitalListScreen extends StatefulWidget {
+class HospitalListScreen extends StatelessWidget {
   const HospitalListScreen({super.key});
-
-  @override
-  State<HospitalListScreen> createState() => _HospitalListScreenState();
-}
-
-class _HospitalListScreenState extends State<HospitalListScreen> {
-  static const _fallbackHospitals = [
-    {'id': '1', 'name': 'Muhimbili National Hospital', 'location': 'Kalenga St, Upanga, Dar es Salaam'},
-    {'id': '2', 'name': 'Aga Khan Hospital', 'location': 'Ocean Road, Dar es Salaam'},
-    {'id': '3', 'name': 'Ocean Road Cancer Institute', 'location': 'Barack Obama Drive, Dar es Salaam'},
-    {'id': '4', 'name': 'Amana Regional Hospital', 'location': 'Ilala, Dar es Salaam'},
+  static const hospitals = [
+    'Muhimbili National Hospital',
+    'Aga Khan Hospital',
+    'Ocean Road Cancer Institute',
+    'Amana Regional Hospital',
+    'Mloganzila Hospital',
+    'Temeke Hospital',
+    'Kinondoni Hospital',
+    'Ilala Hospital',
   ];
-
-  List<Map<String, dynamic>> _hospitals = [];
-  bool _loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadHospitals();
-  }
-
-  Future<void> _loadHospitals() async {
-    setState(() => _loading = true);
-    final data = await ApiService.getInstitutions(type: 'hospital');
-    if (mounted) {
-      setState(() {
-        _hospitals = data.isNotEmpty ? data : List.from(_fallbackHospitals);
-        _loading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final filtered = _filter.isNotEmpty
+        ? hospitals.where((h) => h.toLowerCase().contains(_filter.toLowerCase())).toList()
+        : hospitals;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hospitals (Hospitali)'),
-        leading: BackButton(
-          onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } else {
-              context.go('/home');
-            }
-          },
-        ),
+        title: const Text('Hospitals'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
-            onPressed: _loading ? null : _loadHospitals,
+            icon: const Icon(Icons.search),
+            onPressed: () => showSearch(context: context, delegate: HospitalSearchDelegate(hospitals)),
           ),
         ],
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _hospitals.length,
-              itemBuilder: (_, i) {
-                final h = _hospitals[i];
-                final id = h['id']?.toString() ?? '1';
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.red.shade50,
-                    child: const Icon(Icons.local_hospital, color: Colors.red),
-                  ),
-                  title: Text(h['name'] ?? ''),
-                  subtitle: Text(h['location'] ?? 'Dar es Salaam'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go('/services/$id'),
-                );
-              },
-            ),
+      body: ListView.builder(
+        itemCount: filtered.length,
+        itemBuilder: (_, i) => ListTile(
+          leading: const Icon(Icons.local_hospital),
+          title: Text(filtered[i]),
+          subtitle: const Text('Dar es Salaam'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.go('/services/h$i'),
+        ),
+      ),
+    );
+  }
+  
+  String get _filter => '';
+}
+
+class HospitalSearchDelegate extends SearchDelegate<String> {
+  final List<String> options;
+  HospitalSearchDelegate(this.options);
+  @override
+  List<Widget> buildActions(BuildContext context) => [
+    IconButton(icon: const Icon(Icons.close), onPressed: () => query = ''),
+  ];
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () => close(context, ''),
+  );
+  @override
+  Widget buildResults(BuildContext context) => ListView.builder(
+    itemCount: options.length,
+    itemBuilder: (_, i) => ListTile(
+      title: Text(options[i]),
+      onTap: () => close(context, options[i]),
+    ),
+  );
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return ListView.builder(
+      itemCount: options.length,
+      itemBuilder: (_, i) => ListTile(
+        title: Text(options[i]),
+        onTap: () => close(context, options[i]),
+      ),
     );
   }
 }

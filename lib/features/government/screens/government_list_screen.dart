@@ -1,85 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/services/api_service.dart';
 
 class GovernmentListScreen extends StatefulWidget {
   const GovernmentListScreen({super.key});
-
   @override
   State<GovernmentListScreen> createState() => _GovernmentListScreenState();
 }
 
 class _GovernmentListScreenState extends State<GovernmentListScreen> {
-  static const _fallbackOffices = [
-    {'id': '1', 'name': 'NIDA – National Identification Authority', 'location': 'Kivukoni, Dar es Salaam'},
-    {'id': '2', 'name': 'BRELA – Business Registrations Agency', 'location': 'Lumumba St, Dar es Salaam'},
-    {'id': '3', 'name': 'TRA – Tanzania Revenue Authority', 'location': 'Samora Avenue, Dar es Salaam'},
-    {'id': '4', 'name': 'RITA – Registration Agency', 'location': 'Simu St, Dar es Salaam'},
-    {'id': '5', 'name': 'Immigration Department', 'location': 'Kivukoni Front, Dar es Salaam'},
-    {'id': '6', 'name': 'Local Government Ward Office', 'location': 'Local District'},
+  final List<String> _offices = [
+    'NIDA – National Identification',
+    'BRELA – Business Registration',
+    'TRA – Taxpayer Services',
+    'RITA – Birth, Marriage & Death',
+    'Immigration Office',
+    'Local Government Ward Office',
   ];
-
-  List<Map<String, dynamic>> _offices = [];
-  bool _loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadOffices();
-  }
-
-  Future<void> _loadOffices() async {
-    setState(() => _loading = true);
-    final data = await ApiService.getInstitutions(type: 'government');
-    if (mounted) {
-      setState(() {
-        _offices = data.isNotEmpty ? data : List.from(_fallbackOffices);
-        _loading = false;
-      });
-    }
-  }
+  String _filter = '';
 
   @override
   Widget build(BuildContext context) {
+    final filtered = _filter.isNotEmpty
+        ? _offices.where((o) => o.toLowerCase().contains(_filter.toLowerCase())).toList()
+        : _offices;
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-          onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } else {
-              context.go('/home');
-            }
-          },
-        ),
-        title: const Text('Government (Ofisi za Serikali)'),
+        title: const Text('Government Offices'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
-            onPressed: _loading ? null : _loadOffices,
+            icon: const Icon(Icons.search),
+            onPressed: () => showSearch(context: context, delegate: GovernmentSearchDelegate(_offices)),
           ),
         ],
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _offices.length,
-              itemBuilder: (_, i) {
-                final o = _offices[i];
-                final id = o['id']?.toString() ?? '1';
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.teal.shade50,
-                    child: const Icon(Icons.account_balance, color: Colors.teal),
-                  ),
-                  title: Text(o['name'] ?? ''),
-                  subtitle: Text(o['location'] ?? 'Tanzania'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go('/gov-services/$id'),
-                );
-              },
-            ),
+      body: ListView.builder(
+        itemCount: filtered.length,
+        itemBuilder: (_, i) => ListTile(
+          leading: const Icon(Icons.account_balance),
+          title: Text(filtered[i]),
+          subtitle: const Text('Tanzania'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.go('/gov-services/g$i'),
+        ),
+      ),
+    );
+  }
+}
+
+class GovernmentSearchDelegate extends SearchDelegate<String> {
+  final List<String> options;
+  GovernmentSearchDelegate(this.options);
+  @override
+  List<Widget> buildActions(BuildContext context) => [
+    IconButton(icon: const Icon(Icons.close), onPressed: () => query = ''),
+  ];
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () => close(context, ''),
+  );
+  @override
+  Widget buildResults(BuildContext context) => ListView.builder(
+    itemCount: options.length,
+    itemBuilder: (_, i) => ListTile(
+      title: Text(options[i]),
+      onTap: () => close(context, options[i]),
+    ),
+  );
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return ListView.builder(
+      itemCount: options.length,
+      itemBuilder: (_, i) => ListTile(
+        title: Text(options[i]),
+        onTap: () => close(context, options[i]),
+      ),
     );
   }
 }
