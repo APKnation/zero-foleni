@@ -21,11 +21,11 @@ class ZeroFoleniApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
     
-    // Set up GoRouter with auth guards
+    // Build GoRouter with auth state
     final router = GoRouter(
       initialLocation: '/onboarding',
       routes: [
-        // Auth-required routes (guarded)
+        // Auth-required routes (will be guarded via redirect)
         GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
         GoRoute(path: '/hospitals', builder: (_, __) => const HospitalListScreen()),
         GoRoute(path: '/services/:hospitalId', builder: (_, s) => ServiceListScreen(hospitalId: s.pathParameters['hospitalId']!)),
@@ -59,14 +59,14 @@ class ZeroFoleniApp extends ConsumerWidget {
         GoRoute(path: '/bank-branch-manager', builder: (_, __) => const BankBranchManagerScreen()),
         GoRoute(path: '/bank-admin', builder: (_, __) => const BankAdminDashboardScreen()),
         
-        // Auth routes
+        // Auth routes (public)
         GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
         GoRoute(path: '/register', builder: (_, __) => const CitizenRegisterScreen()),
         
         // Onboarding
         GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
       ],
-      // Auth guards - redirect based on login state
+      // Auth guard: redirect based on login state
       redirect: (context, state) {
         final isAuthRoute = state.matchedLocation == '/login' || state.matchedLocation == '/register' || state.matchedLocation == '/onboarding';
         

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Auth state stored in shared preferences
@@ -47,49 +46,50 @@ class AuthState {
   }
 }
 
-/// Riverpod provider for auth state
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  // Initialize from shared prefs on app start
-  final prefs = ref.read(sharedPrefsProvider);
-  return AuthNotifier(
-    initialState: AuthState.fromSharedPrefs(prefs),
-    ref: ref,
-    prefs: prefs,
-  );
-});
-
-/// Shared preferences provider
-final sharedPrefsProvider = Provider((ref) async {
+/// Riverpod provider for shared preferences
+final sharedPrefsProvider = FutureProvider((ref) async {
   final sharedPrefs = await SharedPreferences.getInstance();
   return sharedPrefs;
 });
 
+/// Riverpod provider for auth state
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
+  final sharedPrefs = ref.watch(sharedPrefsProvider);
+  return AuthNotifier(
+    initialState: AuthState.fromSharedPrefs(sharedPrefs!),
+    ref: ref,
+    prefs: sharedPrefs,
+  );
+});
+
 /// Auth notifier that handles login/logout state
 class AuthNotifier extends StateNotifier<AuthState> {
-  final Ref ref;
-  final SharedPreferences prefs;
+  final Ref _ref;
+  final SharedPreferences _prefs;
 
   AuthNotifier({
     required AuthState initialState,
-    required this.ref,
-    required this.prefs,
-  }) : super(initialState) {
+    required Ref ref,
+    required SharedPreferences prefs,
+  }) : _ref = ref,
+       _prefs = prefs,
+       super(initialState) {
     // Listen for changes and persist
-    ever(state, (_) => state.saveToSharedPrefs(prefs));
-  }
+    // Use didChangeDependencies pattern or manual persist on change
+}
 
   Future<void> login(String phone, String password) async {
-    // TODO: Call GraphQL login_citizen mutation
+    // TODO: Call GraphQL login mutation
     // For now, set local auth state
     state = AuthState._internal(
       isLoggedIn: true,
       phone: phone,
       token: 'temp-token-${phone.hashCode}',
-      fullName: 'Citizen', // would come from backend
+      fullName: 'Citizen',
     );
   }
 
-  void logout() {
+  Future<void> logout() async {
     state = AuthState._internal(
       isLoggedIn: false,
       phone: null,
@@ -97,26 +97,4 @@ class AuthNotifier extends StateNotifier<AuthState> {
       fullName: null,
     );
   }
-}
-
-/// GoRouter guard for authenticated routes
-class AuthGuard extends GoRouteRedirect {
-  AuthGuard({required WidgetRef ref}) : super(
-    path: '/',
-    redirect: (context, state) {
-      final auth = ref.read(authProvider);
-      if (auth.isLoggedIn) return null; // allow access
-      return '/login'; // redirect to login
-    },
-  );
-
-  // Also guard unauthenticated routes
-  static GoRouteRedirect unauthenticatedGuard(WidgetRef ref) => GoRouteRedirect(
-    path: '/login',
-    redirect: (context, state) {
-      final auth = ref.read(authProvider);
-      if (!auth.isLoggedIn) return null; // allow access to login/register
-      return '/home'; // redirect authenticated users away
-    },
-  );
 }
