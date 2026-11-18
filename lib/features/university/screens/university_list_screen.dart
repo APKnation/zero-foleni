@@ -7,7 +7,7 @@ class UniversityListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: const BackButton(), title: const Text('Universities')),
+      appBar: AppBar(leading: BackButton(onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { context.go("/home"); } }), title: const Text('Universities')),
       body: ListView.builder(
         itemCount: unis.length,
         itemBuilder: (_, i) => ListTile(

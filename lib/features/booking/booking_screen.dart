@@ -15,7 +15,7 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: const BackButton(), title: const Text('Book Appointment')),
+      appBar: AppBar(leading: BackButton(onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { context.go("/home"); } }), title: const Text('Book Appointment')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

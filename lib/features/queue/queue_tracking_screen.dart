@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class QueueTrackingScreen extends StatelessWidget {
   const QueueTrackingScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: const BackButton(), title: const Text('Queue Tracking')),
+      appBar: AppBar(leading: BackButton(onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { context.go("/home"); } }), title: const Text('Queue Tracking')),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(children: const [

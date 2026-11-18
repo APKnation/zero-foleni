@@ -8,7 +8,7 @@ class ServiceListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: const BackButton(), title: const Text('Departments')),
+      appBar: AppBar(leading: BackButton(onPressed: () { if (Navigator.canPop(context)) { Navigator.pop(context); } else { context.go("/home"); } }), title: const Text('Departments')),
       body: ListView.builder(
         itemCount: services.length,
         itemBuilder: (_, i) => ListTile(
