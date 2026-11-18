@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -72,8 +71,7 @@ final sharedPrefsProvider = FutureProvider((ref) async {
 
 // Auth state provider - uses shared prefs
 final authStateProvider = StateProvider<AuthState>((ref) {
-  final sp = ref.watch(sharedPrefsProvider);
-  // Return initial state - in a real app you'd load from sp
+  ref.watch(sharedPrefsProvider);
   return AuthState();
 });
 

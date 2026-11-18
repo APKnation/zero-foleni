@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import '../models/citizen.dart';
 
 class ApiService {
   static String? _overrideBaseUrl;
@@ -37,7 +36,7 @@ class ApiService {
         },
         body: jsonEncode({
           'query': q,
-          if (variables != null) 'variables': variables,
+          ...?variables == null ? null : {'variables': variables},
         }),
       ).timeout(const Duration(seconds: 7));
 

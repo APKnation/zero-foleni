@@ -69,9 +69,13 @@ class ZeroFoleniApp extends ConsumerWidget {
         GoRoute(path: '/uni-ticket', builder: (_, __) => const UniversityTicketScreen()),
         GoRoute(path: '/uni-tracking', builder: (_, __) => const UniversityTrackingScreen()),
         
+        // Staff routes
+        GoRoute(path: '/staff', builder: (_, __) => const StaffDashboardScreen()),
+
         // Government routes
         GoRoute(path: '/government', builder: (_, __) => const GovernmentListScreen()),
         GoRoute(path: '/gov-services/:govId', builder: (_, s) => GovernmentServiceScreen(govId: s.pathParameters['govId']!)),
+        GoRoute(path: '/gov-providers', builder: (_, __) => const ServiceProvidersScreen()),
         GoRoute(path: '/gov-ticket', builder: (_, __) => const GovernmentTicketScreen()),
         GoRoute(path: '/gov-tracking', builder: (_, __) => const GovernmentTrackingScreen()),
         
