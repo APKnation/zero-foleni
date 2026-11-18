@@ -5,7 +5,7 @@ class QueueTrackingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Queue Tracking')),
+      appBar: AppBar(leading: const BackButton(), title: const Text('Queue Tracking')),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(children: const [

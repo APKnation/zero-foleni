@@ -6,7 +6,7 @@ class QueueTicketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Queue Ticket')),
+      appBar: AppBar(leading: const BackButton(), title: const Text('Queue Ticket')),
       body: Center(
         child: Card(
           margin: const EdgeInsets.all(24),

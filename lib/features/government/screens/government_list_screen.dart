@@ -7,7 +7,7 @@ class GovernmentListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Government Offices')),
+      appBar: AppBar(leading: const BackButton(), title: const Text('Government Offices')),
       body: ListView.builder(
         itemCount: inst.length,
         itemBuilder: (_, i) => ListTile(

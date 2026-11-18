@@ -7,7 +7,7 @@ class HospitalListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Hospitals')),
+      appBar: AppBar(leading: const BackButton(), title: const Text('Hospitals')),
       body: ListView.builder(
         itemCount: hospitals.length,
         itemBuilder: (_, i) => ListTile(
