@@ -2,7 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'core/router/app_router.dart';
+// Feature imports
+import 'features/onboarding/onboarding_screen.dart';
+import 'features/auth/login_screen.dart';
+import 'features/auth/citizen_register_screen.dart';
+import 'features/home/home_screen.dart';
+import 'features/hospitals/hospital_list_screen.dart';
+import 'features/services/service_list_screen.dart';
+import 'features/booking/booking_screen.dart';
+import 'features/queue/queue_ticket_screen.dart';
+import 'features/queue/queue_tracking_screen.dart';
+import 'features/profile/profile_screen.dart';
+import 'features/history/history_screen.dart';
+import 'features/university/screens/university_list_screen.dart';
+import 'features/university/screens/university_service_screen.dart';
+import 'features/university/screens/university_ticket_tracking_screen.dart';
+import 'features/staff/staff_dashboard_screen.dart';
+import 'features/government/screens/government_list_screen.dart';
+import 'features/government/screens/government_service_screen.dart';
+import 'features/government/screens/government_ticket_tracking_screen.dart';
+import 'features/government/screens/service_providers_screen.dart';
+import 'features/bank/screens/bank_list_screen.dart';
+import 'features/bank/screens/bank_branch_screen.dart';
+import 'features/bank/screens/bank_service_screen.dart';
+import 'features/bank/screens/bank_provider_screen.dart';
+import 'features/bank/screens/bank_booking_screen.dart';
+import 'features/bank/screens/bank_ticket_tracking_screen.dart';
+import 'features/bank/screens/bank_staff_screens.dart';
+
+// Core imports
 import 'core/router/auth_provider.dart';
 import 'core/theme/app_theme.dart';
 
@@ -71,16 +99,14 @@ class ZeroFoleniApp extends ConsumerWidget {
         final isAuthRoute = state.matchedLocation == '/login' || state.matchedLocation == '/register' || state.matchedLocation == '/onboarding';
         
         if (!auth.isLoggedIn && !isAuthRoute) {
-          // Not logged in and trying to access protected route
           return '/login';
         }
         
         if (auth.isLoggedIn && isAuthRoute) {
-          // Logged in and trying to access auth routes
           return '/home';
         }
         
-        return null; // allow navigation
+        return null;
       },
     );
 
