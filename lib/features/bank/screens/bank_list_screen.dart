@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/services/api_service.dart';
+import '../../../core/theme/app_theme.dart';
 
 class BankListScreen extends StatefulWidget {
   const BankListScreen({super.key});
@@ -68,14 +69,14 @@ class _BankListScreenState extends State<BankListScreen> {
               children: [
                 Container(
                   width: double.infinity,
-                  color: _isLive ? Colors.green.shade50 : Colors.orange.shade50,
+                  color: _isLive ? AppTheme.primary : AppTheme.accent,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                   child: Row(
                     children: [
                       Icon(
                         _isLive ? Icons.check_circle : Icons.info,
                         size: 16,
-                        color: _isLive ? Colors.green.shade700 : Colors.orange.shade800,
+                        color: _isLive ? AppTheme.primary : AppTheme.accent,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -84,7 +85,7 @@ class _BankListScreenState extends State<BankListScreen> {
                             : 'Mabenki yamepakiwa toleo la ndani (Offline/Fallback)',
                         style: TextStyle(
                           fontSize: 12,
-                          color: _isLive ? Colors.green.shade800 : Colors.orange.shade900,
+                          color: _isLive ? AppTheme.primary : AppTheme.accent,
                         ),
                       ),
                     ],
@@ -98,8 +99,8 @@ class _BankListScreenState extends State<BankListScreen> {
                       final bankId = b['id']?.toString() ?? '1';
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.blue.shade50,
-                          child: const Icon(Icons.account_balance, color: Colors.blue),
+                          backgroundColor: AppTheme.accent,
+                          child: const Icon(Icons.account_balance, color: AppTheme.accent),
                         ),
                         title: Text(b['name'] ?? ''),
                         subtitle: b['code'] != null && (b['code'] as String).isNotEmpty

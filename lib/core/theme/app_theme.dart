@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Color palette from project specification
-  static const primary = Color(0xFF1A2D42);
-  static const secondary = Color(0xFF2E4156);
-  static const accent = Color(0xFFAA8787);
-  static const surface = Color(0xFFC0C8CA);
-  static const background = Color(0xFFD4D8DD);
+  // New palette
+  static const blue = Color(0xFF345A93);
+  static const darkGreen = Color(0xFF0D4523);
+  static const darkTeal = Color(0xFF2A3C39);
+  static const lightTeal = Color(0xFF84BDA6);
+
+  static const primary = Color(0xFF345A93);
+  static const secondary = Color(0xFF0D4523);
+  static const accent = Color(0xFF2A3C39);
+  static const surface = Color(0xFF2A3C39);
+  static const background = Color(0xFF84BDA6);
 
   static final light = ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
       seedColor: primary,
       primary: primary,
-      secondary: accent,
+      secondary: secondary,
       surface: surface,
     ),
     scaffoldBackgroundColor: background,
@@ -21,7 +26,7 @@ class AppTheme {
       centerTitle: true,
       elevation: 2,
       backgroundColor: primary,
-      foregroundColor: Colors.white,
+      foregroundColor: AppTheme.background,
     ),
     cardTheme: CardThemeData(
       elevation: 6,
@@ -31,7 +36,7 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppTheme.background,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),

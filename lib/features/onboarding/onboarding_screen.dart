@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -7,7 +8,7 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.background,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final height = constraints.maxHeight;
@@ -18,7 +19,7 @@ class OnboardingScreen extends StatelessWidget {
             child: Stack(
               children: [
                 // 1. White background base
-                Container(color: Colors.white),
+                Container(color: AppTheme.background),
 
                 // 2. Top image section with royal blue overlay + wave clip
                 Positioned(
@@ -40,7 +41,7 @@ class OnboardingScreen extends StatelessWidget {
                               'assets/images/foleni.jpg',
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) => Container(
-                                color: const Color(0xFF1E2CB8),
+                                color: AppTheme.primary,
                               ),
                             );
                           },
@@ -53,8 +54,8 @@ class OnboardingScreen extends StatelessWidget {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                const Color(0xFF2633C5).withValues(alpha: 0.88),
-                                const Color(0xFF161F9C).withValues(alpha: 0.94),
+                                AppTheme.primary.withValues(alpha: 0.88),
+                                AppTheme.primary.withValues(alpha: 0.94),
                               ],
                             ),
                           ),
@@ -76,7 +77,7 @@ class OnboardingScreen extends StatelessWidget {
                                     const Text(
                                       'Zero',
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: AppTheme.background,
                                         fontSize: 36,
                                         fontWeight: FontWeight.w900,
                                         fontStyle: FontStyle.italic,
@@ -87,12 +88,12 @@ class OnboardingScreen extends StatelessWidget {
                                     Container(
                                       padding: const EdgeInsets.all(5),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.22),
+                                        color: AppTheme.background.withValues(alpha: 0.22),
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Icon(
                                         Icons.all_inclusive_rounded,
-                                        color: Colors.white,
+                                        color: AppTheme.background,
                                         size: 18,
                                       ),
                                     ),
@@ -100,7 +101,7 @@ class OnboardingScreen extends StatelessWidget {
                                     const Text(
                                       'Foleni',
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: AppTheme.background,
                                         fontSize: 36,
                                         fontWeight: FontWeight.w900,
                                         letterSpacing: -1,
@@ -112,7 +113,7 @@ class OnboardingScreen extends StatelessWidget {
                                 Text(
                                   'SKIP THE QUEUE • SAVE YOUR TIME',
                                   style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.85),
+                                    color: AppTheme.background.withValues(alpha: 0.85),
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 2.4,
@@ -125,7 +126,7 @@ class OnboardingScreen extends StatelessWidget {
                                   'Welcome to ZeroFoleni',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppTheme.background,
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: -0.3,
@@ -136,7 +137,7 @@ class OnboardingScreen extends StatelessWidget {
                                   'Intelligent queue management to guide you\nsmoothly through hospital, bank &\ngovernment visits!',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.88),
+                                    color: AppTheme.background.withValues(alpha: 0.88),
                                     fontSize: 14,
                                     height: 1.55,
                                   ),
@@ -166,10 +167,10 @@ class OnboardingScreen extends StatelessWidget {
                         child: ElevatedButton(
                           onPressed: () => context.go('/login'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1625A8),
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppTheme.primary,
+                            foregroundColor: AppTheme.background,
                             elevation: 4,
-                            shadowColor: const Color(0xFF1625A8).withValues(alpha: 0.4),
+                            shadowColor: AppTheme.primary.withValues(alpha: 0.4),
                             shape: const StadiumBorder(),
                           ),
                           child: const Text(

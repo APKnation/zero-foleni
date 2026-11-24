@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/services/api_service.dart';
+import '../../../core/theme/app_theme.dart';
 
 class BankBookingScreen extends StatefulWidget {
   final String bankId;
@@ -57,7 +58,7 @@ class _BankBookingScreenState extends State<BankBookingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(res['message'] ?? 'Ombi limefanikiwa!'),
-            backgroundColor: res['success'] == true ? Colors.green : Colors.orange,
+            backgroundColor: res['success'] == true ? AppTheme.primary : AppTheme.accent,
           ),
         );
         context.go('/bank-ticket');
@@ -81,9 +82,9 @@ class _BankBookingScreenState extends State<BankBookingScreen> {
           children: [
             ListTile(
               title: Text(date == null ? 'Chagua Tarehe (Select date)' : 'Tarehe: ${date!.toLocal().toString().split(' ').first}'),
-              trailing: const Icon(Icons.calendar_today, color: Colors.blue),
+              trailing: const Icon(Icons.calendar_today, color: AppTheme.accent),
               shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.grey.shade300),
+                side: BorderSide(color: AppTheme.secondary),
                 borderRadius: BorderRadius.circular(8),
               ),
               onTap: () async {
@@ -116,7 +117,7 @@ class _BankBookingScreenState extends State<BankBookingScreen> {
                   ? const SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.background),
                     )
                   : const Text('Thibitisha & Pata Tiketi (Confirm Booking)'),
             ),

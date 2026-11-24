@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/router/auth_provider.dart';
+import '../../core/theme/app_theme.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -29,8 +30,8 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             const CircleAvatar(
               radius: 40,
-              backgroundColor: Colors.blueGrey,
-              child: Icon(Icons.person, size: 50, color: Colors.white),
+              backgroundColor: AppTheme.accent,
+              child: Icon(Icons.person, size: 50, color: AppTheme.background),
             ),
             const SizedBox(height: 16),
             Text(
@@ -40,20 +41,20 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(height: 4),
             Text(
               auth.phone ?? 'Namba ya Simu: --',
-              style: const TextStyle(color: Colors.grey),
+              style: const TextStyle(color: AppTheme.secondary),
             ),
             const SizedBox(height: 24),
             Card(
               child: Column(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.verified_user, color: Colors.green),
+                    leading: const Icon(Icons.verified_user, color: AppTheme.primary),
                     title: const Text('Hali ya Akaunti'),
                     subtitle: Text(auth.isLoggedIn ? 'Akaunti Imethibitishwa' : 'Hujaingia'),
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    leading: const Icon(Icons.security, color: Colors.blue),
+                    leading: const Icon(Icons.security, color: AppTheme.accent),
                     title: const Text('Usalama wa Data'),
                     subtitle: const Text('eGA Data Protection Compliant'),
                   ),
@@ -64,8 +65,8 @@ class ProfileScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                icon: const Icon(Icons.logout, color: Colors.red),
-                label: const Text('Ondoka (Logout)', style: TextStyle(color: Colors.red)),
+                icon: const Icon(Icons.logout, color: AppTheme.accent),
+                label: const Text('Ondoka (Logout)', style: TextStyle(color: AppTheme.accent)),
                 onPressed: () {
                   ref.read(authProvider.notifier).logout();
                   context.go('/login');
