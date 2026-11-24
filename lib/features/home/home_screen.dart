@@ -6,7 +6,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ZeroFoleni'), leading: BackButton(onPressed: () => context.pop())),
+      appBar: AppBar(title: const Text('ZeroFoleni')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -16,6 +16,9 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                padding: const EdgeInsets.all(4),
                 children: [
                   _cat(context, 'Hospitals', Icons.local_hospital, '/hospitals'),
                   _cat(context, 'Universities', Icons.school, '/universities'),

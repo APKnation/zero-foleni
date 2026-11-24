@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/services/api_service.dart';
+import '../../../core/theme/app_theme.dart';
 
 class BankServiceScreen extends StatefulWidget {
   final String bankId;
   final String branchId;
   const BankServiceScreen({
-    Key? key,
+    super.key,
     required this.bankId,
     required this.branchId,
-  }) : super(key: key);
+  });
 
   @override
-  _BankServiceScreenState createState() {
-    return _BankServiceScreenState();
-  }
+  State<BankServiceScreen> createState() => _BankServiceScreenState();
 }
 
 class _BankServiceScreenState extends State<BankServiceScreen> {
-  static const _fallbackServices = ['Account Opening', 'Cash Deposit', 'Cash Withdrawal', 'Money Transfer', 'Loan Services', 'ATM Card Services', 'Customer Support'];
+  static const _fallbackServices = [
+    {'id': '1', 'name': 'Account Opening'},
+    {'id': '2', 'name': 'Cash Deposit'},
+    {'id': '3', 'name': 'Cash Withdrawal'},
+    {'id': '4', 'name': 'Money Transfer'},
+    {'id': '5', 'name': 'Loan Services'},
+    {'id': '6', 'name': 'ATM Card Services'},
+    {'id': '7', 'name': 'Customer Support'},
+  ];
+
   List<Map<String, dynamic>> _services = [];
   bool _loading = true;
 
@@ -39,24 +47,41 @@ class _BankServiceScreenState extends State<BankServiceScreen> {
         });
       }
     } catch (e) {
-      setState(() => _loading = false);
+      if (mounted) {
+        setState(() => _loading = false);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Select Service')),
+      appBar: AppBar(
+        leading: BackButton(onPressed: () => context.go('/bank-branches/${widget.bankId}')),
+        title: const Text('Select Service'),
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
+              padding: const EdgeInsets.all(12),
               itemCount: _services.length,
-              itemBuilder: (_, i) => ListTile(
-                leading: const Icon(Icons.attach_money),
-                title: Text(_services[i]['name'] as String),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.pop(),
-              ),
+              itemBuilder: (_, i) {
+                final s = _services[i];
+                final serviceId = s['id']?.toString() ?? '${i + 1}';
+                final name = s['name']?.toString() ?? s.toString();
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      backgroundColor: AppTheme.primary,
+                      child: Icon(Icons.attach_money, color: AppTheme.background),
+                    ),
+                    title: Text(name),
+                    trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
+                    onTap: () => context.go('/bank-providers/${widget.bankId}/${widget.branchId}/$serviceId'),
+                  ),
+                );
+              },
             ),
     );
   }

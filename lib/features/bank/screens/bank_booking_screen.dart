@@ -74,7 +74,10 @@ class _BankBookingScreenState extends State<BankBookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Book Appointment')),
+      appBar: AppBar(
+        leading: BackButton(onPressed: () => context.go('/bank-providers/${widget.bankId}/${widget.branchId}/${widget.serviceId}')),
+        title: const Text('Book Appointment'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -82,7 +85,7 @@ class _BankBookingScreenState extends State<BankBookingScreen> {
           children: [
             ListTile(
               title: Text(date == null ? 'Chagua Tarehe (Select date)' : 'Tarehe: ${date!.toLocal().toString().split(' ').first}'),
-              trailing: const Icon(Icons.calendar_today, color: AppTheme.accent),
+              trailing: const Icon(Icons.calendar_today, color: AppTheme.primary),
               shape: RoundedRectangleBorder(
                 side: BorderSide(color: AppTheme.secondary),
                 borderRadius: BorderRadius.circular(8),
@@ -102,10 +105,13 @@ class _BankBookingScreenState extends State<BankBookingScreen> {
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
+              runSpacing: 8,
               children: ['09:00', '10:00', '11:00', '14:00', '15:00']
                   .map((t) => ChoiceChip(
                         label: Text(t),
                         selected: time == t,
+                        selectedColor: AppTheme.primary,
+                        labelStyle: TextStyle(color: time == t ? AppTheme.background : AppTheme.secondary),
                         onSelected: (_) => setState(() => time = t),
                       ))
                   .toList(),

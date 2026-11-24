@@ -54,6 +54,7 @@ class _BankListScreenState extends State<BankListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: () => context.go('/home')),
         title: const Text('Select Bank'),
         actions: [
           IconButton(
@@ -76,7 +77,7 @@ class _BankListScreenState extends State<BankListScreen> {
                       Icon(
                         _isLive ? Icons.check_circle : Icons.info,
                         size: 16,
-                        color: _isLive ? AppTheme.primary : AppTheme.accent,
+                        color: AppTheme.background,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -85,7 +86,7 @@ class _BankListScreenState extends State<BankListScreen> {
                             : 'Mabenki yamepakiwa toleo la ndani (Offline/Fallback)',
                         style: TextStyle(
                           fontSize: 12,
-                          color: _isLive ? AppTheme.primary : AppTheme.accent,
+                          color: AppTheme.background,
                         ),
                       ),
                     ],
@@ -99,8 +100,8 @@ class _BankListScreenState extends State<BankListScreen> {
                       final bankId = b['id']?.toString() ?? '1';
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: AppTheme.accent,
-                          child: const Icon(Icons.account_balance, color: AppTheme.accent),
+                          backgroundColor: AppTheme.primary,
+                          child: const Icon(Icons.account_balance, color: AppTheme.background),
                         ),
                         title: Text(b['name'] ?? ''),
                         subtitle: b['code'] != null && (b['code'] as String).isNotEmpty

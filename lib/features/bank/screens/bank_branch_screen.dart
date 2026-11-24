@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/services/api_service.dart';
+import '../../../core/theme/app_theme.dart';
 
 class BankBranchScreen extends StatefulWidget {
   final String bankId;
@@ -12,10 +13,10 @@ class BankBranchScreen extends StatefulWidget {
 
 class _BankBranchScreenState extends State<BankBranchScreen> {
   static const _fallbackBranches = [
-    {'name': 'City Centre Branch', 'location': 'Samora Avenue, Dar es Salaam'},
-    {'name': 'Ubungo Branch', 'location': 'Morogoro Road, Dar es Salaam'},
-    {'name': 'Kariakoo Branch', 'location': 'Msimbazi Street, Dar es Salaam'},
-    {'name': 'Mikocheni Branch', 'location': 'Old Bagamoyo Road, Dar es Salaam'},
+    {'id': '1', 'name': 'City Centre Branch', 'location': 'Samora Avenue, Dar es Salaam'},
+    {'id': '2', 'name': 'Ubungo Branch', 'location': 'Morogoro Road, Dar es Salaam'},
+    {'id': '3', 'name': 'Kariakoo Branch', 'location': 'Msimbazi Street, Dar es Salaam'},
+    {'id': '4', 'name': 'Mikocheni Branch', 'location': 'Old Bagamoyo Road, Dar es Salaam'},
   ];
 
   List<Map<String, dynamic>> _branches = [];
@@ -38,26 +39,42 @@ class _BankBranchScreenState extends State<BankBranchScreen> {
         });
       }
     } catch (e) {
-      setState(() => _loading = false);
+      if (mounted) {
+        setState(() => _loading = false);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Select Branch')),
+      appBar: AppBar(
+        leading: BackButton(onPressed: () => context.go('/bank')),
+        title: const Text('Select Branch'),
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
+              padding: const EdgeInsets.all(12),
               itemCount: _branches.length,
-              itemBuilder: (_, i) => ListTile(
-                leading: const Icon(Icons.location_city),
-                title: Text(_branches[i]['name']),
-                subtitle: Text(_branches[i]['location']),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.pop(_branches[i]['name']),
-              ),
+              itemBuilder: (_, i) {
+                final b = _branches[i];
+                final branchId = b['id']?.toString() ?? '${i + 1}';
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      backgroundColor: AppTheme.primary,
+                      child: Icon(Icons.location_city, color: AppTheme.background),
+                    ),
+                    title: Text(b['name'] ?? ''),
+                    subtitle: Text(b['location'] ?? ''),
+                    trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
+                    onTap: () => context.go('/bank-services/${widget.bankId}/$branchId'),
+                  ),
+                );
+              },
             ),
-      );
+    );
   }
 }

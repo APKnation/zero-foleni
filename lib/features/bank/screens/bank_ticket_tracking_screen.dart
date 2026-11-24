@@ -5,7 +5,7 @@ class BankTicketScreen extends StatelessWidget {
   const BankTicketScreen({super.key});
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Queue Ticket')),
+    appBar: AppBar(leading: BackButton(onPressed: () => context.go('/home')), title: const Text('Queue Ticket')),
     body: Center(child: Card(margin: const EdgeInsets.all(24), child: Padding(padding: const EdgeInsets.all(24), child: Column(mainAxisSize: MainAxisSize.min, children: [
       const Text('Ticket #3321', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
       const SizedBox(height: 8),
@@ -63,7 +63,7 @@ class _BankRescheduleScreenState extends State<BankRescheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Reschedule Ticket')),
+      appBar: AppBar(leading: BackButton(onPressed: () => context.go('/bank-ticket')), title: const Text('Reschedule Ticket')),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Form(
@@ -130,7 +130,7 @@ class BankTrackingScreen extends StatelessWidget {
   const BankTrackingScreen({super.key});
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Queue Tracking')),
+    appBar: AppBar(leading: BackButton(onPressed: () => context.go('/bank-ticket')), title: const Text('Queue Tracking')),
     body: const Padding(padding: EdgeInsets.all(24), child: Column(children: [
       Text('Position: 3', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
       SizedBox(height: 8),

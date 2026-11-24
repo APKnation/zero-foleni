@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/services/api_service.dart';
+import '../../../core/theme/app_theme.dart';
 
 class BankProviderScreen extends StatefulWidget {
   final String bankId;
   final String branchId;
   final String serviceId;
   const BankProviderScreen({
-    Key? key,
+    super.key,
     required this.bankId,
     required this.branchId,
     required this.serviceId,
-  }) : super(key: key);
+  });
 
   @override
-  _BankProviderScreenState createState() => _BankProviderScreenState();
+  State<BankProviderScreen> createState() => _BankProviderScreenState();
 }
 
 class _BankProviderScreenState extends State<BankProviderScreen> {
-  static const _fallbackProviders = ['Teller: A. Juma', 'Teller: J. Mwamba', 'Teller: F. Hassan'];
+  static const _fallbackProviders = [
+    {'id': '1', 'name': 'Teller: A. Juma'},
+    {'id': '2', 'name': 'Teller: J. Mwamba'},
+    {'id': '3', 'name': 'Teller: F. Hassan'},
+  ];
+
   List<Map<String, dynamic>> _providers = [];
   bool _loading = true;
 
@@ -39,24 +45,42 @@ class _BankProviderScreenState extends State<BankProviderScreen> {
         });
       }
     } catch (e) {
-      setState(() => _loading = false);
+      if (mounted) {
+        setState(() => _loading = false);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Select Teller')),
+      appBar: AppBar(
+        leading: BackButton(onPressed: () => context.go('/bank-services/${widget.bankId}/${widget.branchId}')),
+        title: const Text('Select Teller'),
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
+              padding: const EdgeInsets.all(12),
               itemCount: _providers.length,
-              itemBuilder: (_, i) => ListTile(
-                leading: const Icon(Icons.person),
-                title: Text(_providers[i]['name'] as String),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.pop(),
-              ),
+              itemBuilder: (_, i) {
+                final p = _providers[i];
+                final providerId = p['id']?.toString() ?? '${i + 1}';
+                final name = p['name']?.toString() ?? p.toString();
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      backgroundColor: AppTheme.primary,
+                      child: Icon(Icons.person, color: AppTheme.background),
+                    ),
+                    title: Text(name),
+                    subtitle: const Text('Available'),
+                    trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
+                    onTap: () => context.go('/bank-booking/${widget.bankId}/${widget.branchId}/${widget.serviceId}/$providerId'),
+                  ),
+                );
+              },
             ),
     );
   }

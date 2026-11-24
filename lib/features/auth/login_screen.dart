@@ -333,13 +333,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: Row(
                             children: [
                               Icon(Icons.error_outline_rounded,
-                                  color: AppTheme.accent, size: 20),
+                                  color: AppTheme.background, size: 20),
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
                                   _errorMessage!,
                                   style: TextStyle(
-                                    color: AppTheme.accent,
+                                    color: AppTheme.background,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w500,
                                   ),
