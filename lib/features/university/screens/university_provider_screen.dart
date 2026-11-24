@@ -36,7 +36,7 @@ class UniversityProviderScreen extends StatelessWidget {
               title: Text(p['name'] ?? ''),
               subtitle: Text(p['status'] ?? ''),
               trailing: Icon(Icons.chevron_right, color: available ? AppTheme.primary : Colors.grey),
-              onTap: available ? () => context.go('/uni-ticket') : null,
+              onTap: available ? () => context.go('/uni-request/${widget.uniId}/${widget.serviceId}/${p['id']}') : null,
             ),
           );
         },

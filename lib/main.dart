@@ -17,12 +17,15 @@ import 'features/profile/profile_screen.dart';
 import 'features/history/history_screen.dart';
 import 'features/university/screens/university_list_screen.dart';
 import 'features/university/screens/university_service_screen.dart';
+import 'features/university/screens/university_provider_screen.dart';
+import 'features/university/screens/university_request_screen.dart';
 import 'features/university/screens/university_ticket_tracking_screen.dart';
 import 'features/staff/staff_dashboard_screen.dart';
 import 'features/government/screens/government_list_screen.dart';
 import 'features/government/screens/government_service_screen.dart';
 import 'features/government/screens/government_ticket_tracking_screen.dart';
 import 'features/government/screens/service_providers_screen.dart';
+import 'features/government/screens/government_request_screen.dart';
 import 'features/bank/screens/bank_list_screen.dart';
 import 'features/bank/screens/bank_branch_screen.dart';
 import 'features/bank/screens/bank_service_screen.dart';
@@ -68,6 +71,8 @@ class ZeroFoleniApp extends ConsumerWidget {
         // University routes
         GoRoute(path: '/universities', builder: (_, __) => const UniversityListScreen()),
         GoRoute(path: '/uni-services/:uniId', builder: (_, s) => UniversityServiceScreen(uniId: s.pathParameters['uniId']!)),
+        GoRoute(path: '/uni-providers/:uniId/:serviceId', builder: (_, s) => UniversityProviderScreen(uniId: s.pathParameters['uniId']!, serviceId: s.pathParameters['serviceId']!)),
+        GoRoute(path: '/uni-request/:uniId/:serviceId/:providerId', builder: (_, s) => UniversityRequestScreen(uniId: s.pathParameters['uniId']!, serviceId: s.pathParameters['serviceId']!, providerId: s.pathParameters['providerId']!)),
         GoRoute(path: '/uni-ticket', builder: (_, __) => const UniversityTicketScreen()),
         GoRoute(path: '/uni-tracking', builder: (_, __) => const UniversityTrackingScreen()),
         
@@ -78,6 +83,8 @@ class ZeroFoleniApp extends ConsumerWidget {
         GoRoute(path: '/government', builder: (_, __) => const GovernmentListScreen()),
         GoRoute(path: '/gov-services/:govId', builder: (_, s) => GovernmentServiceScreen(govId: s.pathParameters['govId']!)),
         GoRoute(path: '/gov-providers', builder: (_, __) => const ServiceProvidersScreen()),
+        GoRoute(path: '/gov-providers/:govId/:serviceId', builder: (_, s) => ServiceProvidersScreen(govId: s.pathParameters['govId'], serviceId: s.pathParameters['serviceId'])),
+        GoRoute(path: '/gov-request/:govId/:serviceId/:providerId', builder: (_, s) => GovernmentRequestScreen(govId: s.pathParameters['govId']!, serviceId: s.pathParameters['serviceId']!, providerId: s.pathParameters['providerId']!)),
         GoRoute(path: '/gov-ticket', builder: (_, __) => const GovernmentTicketScreen()),
         GoRoute(path: '/gov-tracking', builder: (_, __) => const GovernmentTrackingScreen()),
         

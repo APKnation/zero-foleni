@@ -35,7 +35,7 @@ class GovernmentServiceScreen extends StatelessWidget {
             ),
             title: Text(services[i]),
             trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
-            onTap: () => context.go('/gov-providers'),
+            onTap: () => context.go('/gov-providers/$govId/s$i'),
           ),
         ),
       ),
