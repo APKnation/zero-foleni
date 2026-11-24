@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/services/request_store.dart';
 import '../../../core/theme/app_theme.dart';
 
 class UniversityRequestScreen extends StatefulWidget {
@@ -19,13 +20,28 @@ class _UniversityRequestScreenState extends State<UniversityRequestScreen> {
   final _detailsController = TextEditingController();
   bool _isLoading = false;
 
+  static const services = ['Admissions and Registration','Academic Records and Examinations','Finance and Payments','Student Affairs','ICT Support','Library Services','Accommodation and Hostel Services','Clearance and Graduation'];
+
+  String _serviceName(String id) {
+    final idx = int.tryParse(id.replaceFirst('s', '')) ?? 0;
+    if (idx >= 0 && idx < services.length) return services[idx];
+    return 'University Service';
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(seconds: 1));
+    final req = RequestStore.instance.submit(
+      module: 'university',
+      serviceName: _serviceName(widget.serviceId),
+      providerName: 'Service Desk ${widget.providerId}',
+      userName: _nameController.text.trim(),
+      details: _detailsController.text.trim(),
+    );
     if (mounted) {
       setState(() => _isLoading = false);
-      context.go('/uni-ticket');
+      context.go('/request-status/${req.id}');
     }
   }
 
