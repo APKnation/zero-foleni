@@ -97,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               clipper: _HeaderWaveClipper(),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.only(top: 50, bottom: 65, left: 24, right: 24),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 24, bottom: 65, left: 24, right: 24),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,

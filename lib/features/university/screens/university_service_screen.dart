@@ -37,7 +37,7 @@ class UniversityServiceScreen extends StatelessWidget {
             ),
             title: Text(services[i]),
             trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
-            onTap: () => context.go('/uni-ticket'),
+            onTap: () => context.go('/uni-providers/$uniId/s$i'),
           ),
         ),
       ),
