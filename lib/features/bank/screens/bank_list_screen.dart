@@ -94,11 +94,14 @@ class _BankListScreenState extends State<BankListScreen> {
                 ),
                 Expanded(
                   child: ListView.builder(
+                    padding: const EdgeInsets.all(12),
                     itemCount: _banks.length,
                     itemBuilder: (_, i) {
                       final b = _banks[i];
                       final bankId = b['id']?.toString() ?? '1';
-                      return ListTile(
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: AppTheme.primary,
                           child: const Icon(Icons.account_balance, color: AppTheme.background),
@@ -107,8 +110,9 @@ class _BankListScreenState extends State<BankListScreen> {
                         subtitle: b['code'] != null && (b['code'] as String).isNotEmpty
                             ? Text('Code: ${b['code']}')
                             : null,
-                        trailing: const Icon(Icons.chevron_right),
+                        trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
                         onTap: () => context.go('/bank-branches/$bankId'),
+                      ),
                       );
                     },
                   ),

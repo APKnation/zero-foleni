@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/theme/app_theme.dart';
 
 class GovernmentListScreen extends StatefulWidget {
   const GovernmentListScreen({super.key});
@@ -25,6 +26,7 @@ class _GovernmentListScreenState extends State<GovernmentListScreen> {
         : _offices;
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: () => context.go('/home')),
         title: const Text('Government Offices'),
         actions: [
           IconButton(
@@ -34,13 +36,20 @@ class _GovernmentListScreenState extends State<GovernmentListScreen> {
         ],
       ),
       body: ListView.builder(
+        padding: const EdgeInsets.all(12),
         itemCount: filtered.length,
-        itemBuilder: (_, i) => ListTile(
-          leading: const Icon(Icons.account_balance),
-          title: Text(filtered[i]),
-          subtitle: const Text('Tanzania'),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => context.go('/gov-services/g$i'),
+        itemBuilder: (_, i) => Card(
+          margin: const EdgeInsets.symmetric(vertical: 6),
+          child: ListTile(
+            leading: const CircleAvatar(
+              backgroundColor: AppTheme.primary,
+              child: Icon(Icons.account_balance, color: AppTheme.background),
+            ),
+            title: Text(filtered[i]),
+            subtitle: const Text('Tanzania'),
+            trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
+            onTap: () => context.go('/gov-services/g$i'),
+          ),
         ),
       ),
     );
@@ -61,19 +70,27 @@ class GovernmentSearchDelegate extends SearchDelegate<String> {
   );
   @override
   Widget buildResults(BuildContext context) => ListView.builder(
+    padding: const EdgeInsets.all(12),
     itemCount: options.length,
-    itemBuilder: (_, i) => ListTile(
-      title: Text(options[i]),
-      onTap: () => close(context, options[i]),
+    itemBuilder: (_, i) => Card(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      child: ListTile(
+        title: Text(options[i]),
+        onTap: () => close(context, options[i]),
+      ),
     ),
   );
   @override
   Widget buildSuggestions(BuildContext context) {
     return ListView.builder(
+      padding: const EdgeInsets.all(12),
       itemCount: options.length,
-      itemBuilder: (_, i) => ListTile(
-        title: Text(options[i]),
-        onTap: () => close(context, options[i]),
+      itemBuilder: (_, i) => Card(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        child: ListTile(
+          title: Text(options[i]),
+          onTap: () => close(context, options[i]),
+        ),
       ),
     );
   }

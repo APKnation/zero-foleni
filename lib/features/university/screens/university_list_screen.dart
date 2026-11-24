@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/theme/app_theme.dart';
 
 class UniversityListScreen extends StatelessWidget {
   const UniversityListScreen({super.key});
@@ -11,13 +12,12 @@ class UniversityListScreen extends StatelessWidget {
     'St. Augustine University of Tanzania',
     'Open University of Tanzania',
   ];
+
   @override
   Widget build(BuildContext context) {
-    final filtered = _filter.isNotEmpty
-        ? unis.where((u) => u.toLowerCase().contains(_filter.toLowerCase())).toList()
-        : unis;
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: () => context.go('/home')),
         title: const Text('Universities'),
         actions: [
           IconButton(
@@ -27,19 +27,24 @@ class UniversityListScreen extends StatelessWidget {
         ],
       ),
       body: ListView.builder(
-        itemCount: filtered.length,
-        itemBuilder: (_, i) => ListTile(
-          leading: const Icon(Icons.school),
-          title: Text(filtered[i]),
-          subtitle: const Text('Tanzania'),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => context.go('/uni-services/u$i'),
+        padding: const EdgeInsets.all(12),
+        itemCount: unis.length,
+        itemBuilder: (_, i) => Card(
+          margin: const EdgeInsets.symmetric(vertical: 6),
+          child: ListTile(
+            leading: const CircleAvatar(
+              backgroundColor: AppTheme.primary,
+              child: Icon(Icons.school, color: AppTheme.background),
+            ),
+            title: Text(unis[i]),
+            subtitle: const Text('Tanzania'),
+            trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
+            onTap: () => context.go('/uni-services/u$i'),
+          ),
         ),
       ),
     );
   }
-  
-  String get _filter => '';
 }
 
 class UniversitySearchDelegate extends SearchDelegate<String> {
@@ -56,19 +61,27 @@ class UniversitySearchDelegate extends SearchDelegate<String> {
   );
   @override
   Widget buildResults(BuildContext context) => ListView.builder(
+    padding: const EdgeInsets.all(12),
     itemCount: options.length,
-    itemBuilder: (_, i) => ListTile(
-      title: Text(options[i]),
-      onTap: () => close(context, options[i]),
+    itemBuilder: (_, i) => Card(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      child: ListTile(
+        title: Text(options[i]),
+        onTap: () => close(context, options[i]),
+      ),
     ),
   );
   @override
   Widget buildSuggestions(BuildContext context) {
     return ListView.builder(
+      padding: const EdgeInsets.all(12),
       itemCount: options.length,
-      itemBuilder: (_, i) => ListTile(
-        title: Text(options[i]),
-        onTap: () => close(context, options[i]),
+      itemBuilder: (_, i) => Card(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        child: ListTile(
+          title: Text(options[i]),
+          onTap: () => close(context, options[i]),
+        ),
       ),
     );
   }
