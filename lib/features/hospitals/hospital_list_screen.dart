@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
 
 class HospitalListScreen extends StatelessWidget {
   const HospitalListScreen({super.key});
@@ -13,13 +14,12 @@ class HospitalListScreen extends StatelessWidget {
     'Kinondoni Hospital',
     'Ilala Hospital',
   ];
+
   @override
   Widget build(BuildContext context) {
-    final filtered = _filter.isNotEmpty
-        ? hospitals.where((h) => h.toLowerCase().contains(_filter.toLowerCase())).toList()
-        : hospitals;
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(onPressed: () => context.go('/home')),
         title: const Text('Hospitals'),
         actions: [
           IconButton(
@@ -29,19 +29,24 @@ class HospitalListScreen extends StatelessWidget {
         ],
       ),
       body: ListView.builder(
-        itemCount: filtered.length,
-        itemBuilder: (_, i) => ListTile(
-          leading: const Icon(Icons.local_hospital),
-          title: Text(filtered[i]),
-          subtitle: const Text('Dar es Salaam'),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => context.go('/services/h$i'),
+        padding: const EdgeInsets.all(12),
+        itemCount: hospitals.length,
+        itemBuilder: (_, i) => Card(
+          margin: const EdgeInsets.symmetric(vertical: 6),
+          child: ListTile(
+            leading: const CircleAvatar(
+              backgroundColor: AppTheme.primary,
+              child: Icon(Icons.local_hospital, color: AppTheme.background),
+            ),
+            title: Text(hospitals[i]),
+            subtitle: const Text('Dar es Salaam'),
+            trailing: const Icon(Icons.chevron_right, color: AppTheme.primary),
+            onTap: () => context.go('/services/h$i'),
+          ),
         ),
       ),
     );
   }
-  
-  String get _filter => '';
 }
 
 class HospitalSearchDelegate extends SearchDelegate<String> {
@@ -58,19 +63,27 @@ class HospitalSearchDelegate extends SearchDelegate<String> {
   );
   @override
   Widget buildResults(BuildContext context) => ListView.builder(
+    padding: const EdgeInsets.all(12),
     itemCount: options.length,
-    itemBuilder: (_, i) => ListTile(
-      title: Text(options[i]),
-      onTap: () => close(context, options[i]),
+    itemBuilder: (_, i) => Card(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      child: ListTile(
+        title: Text(options[i]),
+        onTap: () => close(context, options[i]),
+      ),
     ),
   );
   @override
   Widget buildSuggestions(BuildContext context) {
     return ListView.builder(
+      padding: const EdgeInsets.all(12),
       itemCount: options.length,
-      itemBuilder: (_, i) => ListTile(
-        title: Text(options[i]),
-        onTap: () => close(context, options[i]),
+      itemBuilder: (_, i) => Card(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        child: ListTile(
+          title: Text(options[i]),
+          onTap: () => close(context, options[i]),
+        ),
       ),
     );
   }
