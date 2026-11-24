@@ -7,6 +7,7 @@ import '../../features/auth/citizen_register_screen.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/hospitals/hospital_list_screen.dart';
 import '../../features/services/service_list_screen.dart';
+import '../../features/pharmacy/pharmacy_list_screen.dart';
 import '../../features/university/screens/university_list_screen.dart';
 import '../../features/university/screens/university_service_screen.dart';
 import '../../features/university/screens/university_ticket_tracking_screen.dart';
@@ -38,6 +39,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
       GoRoute(path: '/hospitals', builder: (_, __) => const HospitalListScreen()),
       GoRoute(path: '/services/:hospitalId', builder: (_, s) => ServiceListScreen(hospitalId: s.pathParameters['hospitalId']!)),
+      GoRoute(path: '/pharmacies', builder: (_, __) => const PharmacyListScreen()),
       GoRoute(path: '/booking/:hospitalId/:serviceId', builder: (_, s) => BookingScreen(hospitalId: s.pathParameters['hospitalId']!, serviceId: s.pathParameters['serviceId']!)),
       GoRoute(path: '/ticket', builder: (_, __) => const QueueTicketScreen()),
       GoRoute(path: '/tracking', builder: (_, __) => const QueueTrackingScreen()),

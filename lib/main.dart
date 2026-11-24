@@ -9,6 +9,7 @@ import 'features/auth/citizen_register_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/hospitals/hospital_list_screen.dart';
 import 'features/services/service_list_screen.dart';
+import 'features/pharmacy/pharmacy_list_screen.dart';
 import 'features/booking/booking_screen.dart';
 import 'features/queue/queue_ticket_screen.dart';
 import 'features/queue/queue_tracking_screen.dart';
@@ -57,6 +58,7 @@ class ZeroFoleniApp extends ConsumerWidget {
         GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
         GoRoute(path: '/hospitals', builder: (_, __) => const HospitalListScreen()),
         GoRoute(path: '/services/:hospitalId', builder: (_, s) => ServiceListScreen(hospitalId: s.pathParameters['hospitalId']!)),
+        GoRoute(path: '/pharmacies', builder: (_, __) => const PharmacyListScreen()),
         GoRoute(path: '/booking/:hospitalId/:serviceId', builder: (_, s) => BookingScreen(hospitalId: s.pathParameters['hospitalId']!, serviceId: s.pathParameters['serviceId']!)),
         GoRoute(path: '/ticket', builder: (_, __) => const QueueTicketScreen()),
         GoRoute(path: '/tracking', builder: (_, __) => const QueueTrackingScreen()),
@@ -87,6 +89,7 @@ class ZeroFoleniApp extends ConsumerWidget {
         GoRoute(path: '/bank-booking/:bankId/:branchId/:serviceId/:providerId', builder: (_, s) => BankBookingScreen(bankId: s.pathParameters['bankId']!, branchId: s.pathParameters['branchId']!, serviceId: s.pathParameters['serviceId']!, providerId: s.pathParameters['providerId']!)),
         GoRoute(path: '/bank-ticket', builder: (_, __) => const BankTicketScreen()),
         GoRoute(path: '/bank-tracking', builder: (_, __) => const BankTrackingScreen()),
+        GoRoute(path: '/bank-reschedule', builder: (_, __) => const BankRescheduleScreen()),
         GoRoute(path: '/bank-teller', builder: (_, __) => const BankTellerDashboardScreen()),
         GoRoute(path: '/bank-branch-manager', builder: (_, __) => const BankBranchManagerScreen()),
         GoRoute(path: '/bank-admin', builder: (_, __) => const BankAdminDashboardScreen()),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -21,6 +22,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(4),
                 children: [
                   _cat(context, 'Hospitals', Icons.local_hospital, '/hospitals'),
+                  _cat(context, 'Pharmacies', Icons.local_pharmacy, '/pharmacies'),
                   _cat(context, 'Universities', Icons.school, '/universities'),
                   _cat(context, 'Government', Icons.account_balance, '/government'),
                   _cat(context, 'Banks', Icons.account_balance_wallet, '/bank'),
@@ -36,7 +38,16 @@ class HomeScreen extends StatelessWidget {
   Widget _cat(BuildContext c, String t, IconData i, String r) => Card(
     child: InkWell(
       onTap: () => c.go(r),
-      child: Center(child: Column(mainAxisSize: MainAxisSize.min, children: [Icon(i, size: 48), Text(t)])),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(i, size: 40, color: AppTheme.primary),
+            const SizedBox(height: 8),
+            Text(t, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ),
     ),
   );
 }
